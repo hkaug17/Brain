@@ -690,6 +690,25 @@ main > section{padding-top:30px}
 :root[data-theme="light"] .door-art,:root[data-theme="light"] .ovc-art{background:radial-gradient(ellipse at 50% 60%,#ece6dc,transparent 70%)}
 :root[data-theme="light"] dialog::backdrop{background:rgba(40,34,26,.35)}
 
+
+/* ===== vision & hemisphere boards ===== */
+.mp .halo{fill:none;stroke:var(--mc);stroke-opacity:.16;stroke-linecap:round;stroke-linejoin:round;transition:stroke-opacity .15s}
+.mp.mhv .halo,.mp:hover .halo{stroke-opacity:.42}
+.mp.on .halo{stroke-opacity:.75}
+.mp.bad .halo{stroke:var(--bad)!important;stroke-opacity:.85}
+.vflow{stroke-dasharray:10 9;animation:vflow .9s linear infinite}
+@keyframes vflow{to{stroke-dashoffset:-19}}
+@media (prefers-reduced-motion:reduce){.vflow{animation:none}}
+.hgame{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 14px;align-items:center;border:1px solid var(--line);border-radius:14px;background:var(--bg);padding:12px 16px}
+.hg-q{display:grid;gap:2px;min-width:0}
+.hg-q b{font-family:var(--font-display);font-size:clamp(22px,2.6vw,28px);font-weight:500;line-height:1.2}
+.hg-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.hg-btns .btn{min-width:92px}
+.hgame .xnote{grid-column:1/-1;margin:0}
+.splitout{margin:0}
+.splitout b{color:var(--ink)}
+@media (max-width:600px){ .hgame{grid-template-columns:minmax(0,1fr)} .hg-btns{justify-content:flex-start} .xsvg .b-two .hsk{font-size:32px!important} }
+
 footer{color:var(--muted);font-size:12.5px;padding-block:40px 30px}
 section[hidden]{display:none!important}
 
@@ -832,8 +851,8 @@ section[hidden]{display:none!important}
     <div class="doors">
       <div class="door">
         <a class="door-main" href="#brain"><div class="door-art" id="doorBrain"></div>
-          <div class="door-txt"><span class="eyebrow">Part 1</span><h2>The Brain</h2><p>Structures and lobes, brain imaging, damage, the two hemispheres and the split brain.</p></div></a>
-        <div class="door-links"><a href="#study">Brain Map</a><a href="#imaging">Imaging</a><a href="#atlas">Atlas</a><a class="go" href="#brain">Open section →</a></div>
+          <div class="door-txt"><span class="eyebrow">Part 1</span><h2>The Brain</h2><p>Structures and lobes, brain imaging, damage, vision, the two hemispheres and the split brain.</p></div></a>
+        <div class="door-links"><a href="#study">Brain Map</a><a href="#imaging">Imaging</a><a href="#vision">Vision</a><a href="#hemis">Hemispheres</a><a class="go" href="#brain">Open section →</a></div>
       </div>
       <div class="door">
         <a class="door-main" href="#neuro"><div class="door-art" id="doorNeuro"></div>
@@ -846,7 +865,7 @@ section[hidden]{display:none!important}
 
   <!-- SECTION OVERVIEWS -->
   <section id="page-brain" data-page="brain" hidden>
-    <div class="ov-head"><span class="eyebrow">Part 1</span><h1>The Brain</h1><p class="lede">Learn where each structure is and what it does, how scientists look at the brain, and what happens when it is damaged or split.</p></div>
+    <div class="ov-head"><span class="eyebrow">Part 1</span><h1>The Brain</h1><p class="lede">Learn where each structure is and what it does, how scientists look at the brain, how you see, and what happens when the brain is damaged or split.</p></div>
     <div class="ov-grid" id="brainPages"></div>
     <div class="ov-practice" id="brainPractice"></div>
   </section>
@@ -967,7 +986,7 @@ section[hidden]{display:none!important}
     <p class="lede" id="qLede"></p>
     <div class="seg qtopic" role="group" aria-label="Quiz topic" id="qTopic">
       <button type="button" data-t="brain" aria-pressed="false">Brain parts<small>the brain</small></button>
-      <button type="button" data-t="body" aria-pressed="false">Diagrams<small>neurons &amp; body</small></button>
+      <button type="button" data-t="body" aria-pressed="false">Diagrams<small>every diagram</small></button>
       <button type="button" data-t="nt" aria-pressed="false">Neurotransmitters<small>neurons &amp; body</small></button>
       <button type="button" data-t="terms" aria-pressed="false">Terms<small>every slide</small></button>
     </div>
@@ -1014,6 +1033,20 @@ section[hidden]{display:none!important}
     <div class="pairs" id="imgPairs"></div>
     <div class="strip-head"><h2>Test yourself</h2></div>
     <div class="iq" id="imgQuiz"></div>
+  </section>
+
+  <!-- VISION -->
+  <section id="page-vision" data-page="vision" hidden>
+    <h1>Vision</h1>
+    <p class="lede">How what you see travels from the eyes to the visual cortex at the back of the brain. Hover or tap any part.</p>
+    <div id="vxRoot"></div>
+  </section>
+
+  <!-- HEMISPHERES -->
+  <section id="page-hemis" data-page="hemis" hidden>
+    <h1>Hemispheres &amp; Split Brain</h1>
+    <p class="lede">What each hemisphere is better at, and what happens when the corpus callosum is cut. Hover or tap any part.</p>
+    <div id="hxRoot"></div>
   </section>
 
   <!-- TERMS -->
@@ -1671,6 +1704,7 @@ const TCATS = [
   {id:"imaging", name:"Brain imaging", blurb:"The machines that show the brain's structure and activity."},
   {id:"language", name:"Brain damage", blurb:"Aphasia, lesions, Phineas Gage and concussions."},
   {id:"plasticity", name:"Neuroplasticity", blurb:"How the brain changes, grows new neurons and rewires with practice."},
+  {id:"vision", name:"Vision", blurb:"How what you see gets from the eyes to the occipital lobe."},
   {id:"hemispheres", name:"Hemispheres", blurb:"What the left and right hemispheres are each better at."},
   {id:"split", name:"Split brain", blurb:"What split-brain patients revealed about the two hemispheres."},
   {id:"interpreter", name:"The interpreter", blurb:"How the left hemisphere explains behavior it did not cause."},
@@ -1730,21 +1764,33 @@ const T_RAW = {
     ["London cab driver study","Years of navigation were associated with increased hippocampal size.",null,"hippocampus"],
     ["Functional plasticity","Healthy brain regions can sometimes take over functions of damaged regions."],
   ],
+  vision:[
+    ["Occipital lobes","Located in the back of the head; contain the primary visual cortex.",null,"occipital","vision-cortex-v1"],
+    ["Primary visual cortex","In the occipital lobe: the first part of the cortex to receive what the eyes see.",null,"occipital","vision-cortex-v1"],
+    ["Secondary visual cortex","Surrounds the primary visual cortex and keeps processing what you see.",null,null,"vision-cortex-v2"],
+    ["Inferotemporal area","Lower part of the temporal lobe, at the end of the “What” path: recognizing what you are looking at.",null,null,"vision-cortex-it"],
+    ["Posterior parietal area","Back of the parietal lobe; uses what you see to judge where things are.",null,null,"vision-cortex-pp"],
+    ["Optic nerves","Carry the visual message from the eyes toward the brain.",null,null,"vision-pathway-nerves"],
+    ["Optic chiasm","Where the optic nerves cross, so each visual field goes to the opposite hemisphere.",null,null,"vision-pathway-chiasm"],
+    ["Thalamus and vision","The thalamus relays information from the senses (except smell); visual messages pass through it on the way to the occipital lobe.",null,"thalamus","vision-pathway-thal"],
+    ["Visual area of the left hemisphere","Receives the right visual field.",null,null,"vision-pathway-vleft"],
+    ["Visual area of the right hemisphere","Receives the left visual field.",null,null,"vision-pathway-vright"],
+  ],
   hemispheres:[
-    ["Hemispheric specialization","Left and right hemispheres are better at different kinds of processing."],
+    ["Hemispheric specialization","Left and right hemispheres are better at different kinds of processing.",null,null,"hemis-two"],
     ["Left hemisphere","Reading, writing, speaking, math and comprehension. Called the “dominant brain” in the 1960s."],
     ["Right hemisphere","Creativity, rhythm, non-verbal skills, feelings and visuospatial skills (also face recognition, art and music)."],
     ["Are people simply “left-brained” or “right-brained”?","No; most thoughts and behaviors require both hemispheres working together."],
     ["Corpus callosum's role","Bundle of nerves that lets the left and right hemispheres communicate.",null,"corpus"],
   ],
   split:[
-    ["Split-brain procedure","A form of psychosurgery: the corpus callosum is cut, isolating the two hemispheres.",null,"corpus"],
+    ["Split-brain procedure","A form of psychosurgery: the corpus callosum is cut, isolating the two hemispheres.",null,"corpus","hemis-split-cc"],
     ["Why was split-brain surgery performed?","To help people with severe (grand mal) seizures."],
     ["Sperry and Gazzaniga","Researchers who studied split-brain patients and hemispheric specialization."],
-    ["Right visual field (RVF)","Sends information mainly to the left hemisphere."],
-    ["Left visual field (LVF)","Sends information mainly to the right hemisphere."],
-    ["Apple in the right visual field","A split-brain patient can name it: it reaches the left hemisphere, where language is."],
-    ["Pencil in the left visual field","A split-brain patient cannot name it: it reaches only the right hemisphere."],
+    ["Right visual field (RVF)","Sends information mainly to the left hemisphere.",null,null,"vision-pathway-rvf"],
+    ["Left visual field (LVF)","Sends information mainly to the right hemisphere.",null,null,"vision-pathway-lvf"],
+    ["Apple in the right visual field","A split-brain patient can name it: it reaches the left hemisphere, where language is.",null,null,"hemis-split-rvf"],
+    ["Pencil in the left visual field","A split-brain patient cannot name it: it reaches only the right hemisphere.",null,null,"hemis-split-lvf"],
     ["Which hand does the left hemisphere control?","The right hand."],
     ["Which hand does the right hemisphere control?","The left hand."],
     ["LVF object + left hand","The right hemisphere sees it and can guide the left hand to pick it out."],
@@ -1980,14 +2026,18 @@ function explainer(cat){
     return `<div class="explain hemis">
       <div class="hemi" style="--hc:#f4c542"><h3><i></i>Left hemisphere</h3><ul><li>Language, reading, writing, speaking</li><li>Math and comprehension</li><li>Controls the right hand</li><li>Receives the right visual field</li></ul></div>
       <div class="hemi" style="--hc:#33d1e0"><h3><i></i>Right hemisphere</h3><ul><li>Spatial ability and face recognition</li><li>Emotion, art and music</li><li>Controls the left hand</li><li>Receives the left visual field</li></ul></div>
-      <p class="hemi-note">Most thoughts and behaviors use both hemispheres together, linked by the corpus callosum.</p></div>`;
+      <p class="hemi-note">Most thoughts and behaviors use both hemispheres together, linked by the corpus callosum. <a href="#hemis-two" style="color:var(--ink)">Sort the skills yourself →</a></p></div>`;
+  }
+  if (cat==="vision"){
+    return `<p class="hookline" style="margin:0 0 14px">Each visual field goes to the <b>opposite</b> hemisphere. Vision ends at the back of the brain, in the <b>occipital lobe</b>. <a href="#vision" style="color:var(--ink)">See the pathway →</a></p>`;
   }
   if (cat==="split"){
     return `<div class="explain vf">${splitSVG()}<ol>
       <li>Each visual field goes to the <b>opposite</b> hemisphere: RVF to the left, LVF to the right.</li>
       <li>With the corpus callosum cut, the two sides can no longer share what they saw.</li>
       <li>An RVF object reaches the language-dominant left hemisphere, so the patient can <b>name it</b>.</li>
-      <li>An LVF object reaches only the right hemisphere: the patient cannot name it, but the <b>left hand</b> can pick it out.</li></ol></div>`;
+      <li>An LVF object reaches only the right hemisphere: the patient cannot name it, but the <b>left hand</b> can pick it out.</li></ol>
+      <p class="hemi-note" style="grid-column:1/-1"><a href="#hemis-split" style="color:var(--ink)">Run the split-brain experiment →</a></p></div>`;
   }
   return "";
 }
@@ -2854,7 +2904,7 @@ function boardLabels(b, st){
     const [ax,ay]=p.at, [px,py,side]=p.lab;
     const tx = side==="l"? px-8 : side==="r"? px+8 : px, ty = (side==="t"||side==="tl"||side==="tr")? py-8 : side==="b"? py+fs+2 : py+fs*0.35;
     const anc = (side==="l"||side==="tl")?"end":(side==="r"||side==="tr")?"start":"middle";
-    const txt = p.eff ? p.eff[mode] : p.name;
+    const txt = p.eff ? p.eff[mode] : (p.lt || p.name);
     return `<g class="ml" data-for="${p.id}" style="--mc:${partColor(b,p.id)}"><line x1="${ax}" y1="${ay}" x2="${px}" y2="${py}"/><circle cx="${ax}" cy="${ay}" r="5"/><text x="${tx}" y="${ty}" text-anchor="${anc}" style="font-size:${fs}px">${esc(txt)}</text></g>`; }).join("")}</g>`;
 }
 function boardSVG(b, {labels=true, cls="", st={mode:{}}}={}){
@@ -2862,7 +2912,260 @@ function boardSVG(b, {labels=true, cls="", st={mode:{}}}={}){
   const art = b.draw(st).replace(/<g class="mp" data-part="([^"]+)"/g, (m,id)=>`${m} style="--mc:${partColor(b,id)}"`);
   return `<svg class="mach-svg pc b-${b.id} ${cls}" viewBox="0 0 ${b.vb[0]} ${b.vb[1]}" role="img" aria-label="${esc(b.title)}" style="--mc:${c}">${art}${labels?boardLabels(b,st):""}</svg>`;
 }
-const ALLBOARDS = [...NBOARDS.map(b=>Object.assign(b,{page:"neurons"})), ...BBOARDS.map(b=>Object.assign(b,{page:"nervous"}))];
+/* =================== VISION & HEMISPHERE BOARDS (from the brain slides, Day 1 occipital lobe + Day 3) =================== */
+const VC = {L:"#4fc3f7", R:"#ff6b5e"};            /* right visual field → left hemisphere = blue, left field → right hemisphere = red (as on the slide) */
+/* top view of the brain, front at the top, left hemisphere on the left */
+const TOP_LH = "M496 360 C470 346 420 342 380 356 C330 374 300 412 290 460 C278 516 276 580 282 640 C288 700 312 760 352 798 C384 828 428 844 466 842 C482 841 492 836 496 828 Z";
+const mirrorPath = d => d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (m,x,y)=>`${f1(1000-x)} ${y}`);
+const TOP_RH = mirrorPath(TOP_LH);
+const TOP_VL = "M304 727 C316 754 332 779 352 798 C384 828 428 844 466 842 C482 841 492 836 496 828 L496 742 C430 752 360 748 304 727 Z";
+const TOP_VR = mirrorPath(TOP_VL);
+const TOP_FIB = {
+  Lb:"M428 326 C430 368 460 402 484 428 C496 444 482 500 468 560",   /* left eye, right-field fibers: stay left */
+  Lr:"M446 328 C448 368 476 398 498 422 C512 438 524 494 532 560",   /* left eye, left-field fibers: cross */
+  Rr:"M572 326 C570 368 540 402 516 428 C504 444 518 500 532 560",   /* right eye, left-field fibers: stay right */
+  Rb:"M554 328 C552 368 524 398 502 422 C488 438 476 494 468 560",   /* right eye, right-field fibers: cross */
+  radL:"M468 560 C440 620 418 690 406 752", radR:"M532 560 C560 620 582 690 594 752",
+};
+const NERVES = "M437 330 C439 366 466 398 490 424 M563 330 C561 366 534 398 510 424";
+(function addVisionDefs(){
+  const defs = document.getElementById("sprite-paths").parentNode;
+  const mk = (tag, attrs, inner="")=>{ const e=document.createElementNS(NS,tag); for (const [k,v] of Object.entries(attrs)) e.setAttribute(k,v); e.innerHTML=inner; defs.appendChild(e); };
+  mk("clipPath",{id:"clipTopL"},`<path d="${TOP_LH}"/>`); mk("clipPath",{id:"clipTopR"},`<path d="${TOP_RH}"/>`);
+  mk("clipPath",{id:"clipLatPar"},`<use href="#lat-r-parietal"/>`); mk("clipPath",{id:"clipLatTmp"},`<use href="#lat-r-temporal"/>`);
+  for (const [id,c] of [["mkBlue",VC.L],["mkRed",VC.R],["mkWhat","#2c6fd6"]]) mk("marker",{id, viewBox:"0 0 10 10", refX:"6", refY:"5", markerWidth:"5", markerHeight:"5", orient:"auto-start-reverse"},`<path d="M0 0L10 5L0 10z" fill="${c}"/>`);
+})();
+/* sulci for the top view: wavy lines running out from the midline, plus a few running front to back */
+function gyri(seed, side){
+  const R = rng(seed), out = [], mx = x => side<0 ? x : 1000-x;
+  for (let k=0;k<11;k++){
+    const y0 = 372 + k*44 + (R()-.5)*16, x0 = 492 - R()*40, x1 = 270 + R()*50, n = 6, pts=[];
+    for (let i=0;i<=n;i++){ const t=i/n; pts.push([mx(x0+(x1-x0)*t), y0 + Math.sin(t*Math.PI*(1.4+R()))*14*(R()-.3) + (R()-.5)*12 + t*(k<5?-18:18)]); }
+    out.push(catmullPath(pts.slice(R()<.5?1:0, n-(R()<.4?1:0)+1)));
+    if (R()<.7){ const j=2+Math.floor(R()*3), p=pts[j]; out.push(catmullPath([p,[p[0]+(R()-.5)*30, p[1]+16+R()*14],[p[0]+(R()-.5)*40, p[1]+30+R()*12]])); }
+  }
+  for (let k=0;k<3;k++){ const x = 300+k*62+R()*20, pts=[]; for (let i=0;i<7;i++) pts.push([mx(x+(R()-.5)*22), 400+i*62+(R()-.5)*18]); out.push(catmullPath(pts.slice(1+Math.floor(R()*2), 5+Math.floor(R()*2)))); }
+  return out.join(" ");
+}
+const TOP_GYRI_L = gyri(11, -1), TOP_GYRI_R = gyri(29, 1);
+function topHemis(cls=""){
+  return `<path d="${TOP_LH}" fill="url(#mSkin)" ${OL} class="${cls}"/><path d="${TOP_RH}" fill="url(#mSkin)" ${OL} class="${cls}"/>
+  <g style="pointer-events:none"><path d="${TOP_GYRI_L}" clip-path="url(#clipTopL)" fill="none" stroke="#6f6a62" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+  <path d="${TOP_GYRI_R}" clip-path="url(#clipTopR)" fill="none" stroke="#6f6a62" stroke-width="3" stroke-linecap="round" opacity=".5"/></g>`;
+}
+const PENCIL = (x,y)=>`<g transform="translate(${x} ${y}) rotate(-35)"><rect x="-44" y="-8" width="72" height="16" rx="2" fill="#f4c542" stroke="#2a2825" stroke-width="1.6"/><path d="M28 -8 L46 0 L28 8 Z" fill="#e8c9a0" stroke="#2a2825" stroke-width="1.6"/><path d="M41 -2.3 L46 0 L41 2.3 Z" fill="#2a2825"/><rect x="-52" y="-8" width="10" height="16" rx="2" fill="#f08a7b" stroke="#2a2825" stroke-width="1.6"/></g>`;
+const APPLE = (x,y)=>`<g transform="translate(${x} ${y})"><path d="M0 -14 C-10 -24 -32 -20 -32 2 C-32 22 -16 34 0 28 C16 34 32 22 32 2 C32 -20 10 -24 0 -14 Z" fill="#e0533f" stroke="#2a2825" stroke-width="1.6"/><path d="M0 -14 C0 -22 2 -28 6 -32" fill="none" stroke="#5e4630" stroke-width="3" stroke-linecap="round"/><path d="M5 -26 C14 -34 24 -30 26 -26 C18 -20 10 -22 5 -26 Z" fill="#3ecf8e" stroke="#2a2825" stroke-width="1.2"/><ellipse cx="-14" cy="-4" rx="6" ry="9" fill="#fff" opacity=".35"/></g>`;
+function eyeTop(x){
+  const r = 28, y = 300;
+  return `<circle cx="${x}" cy="${y}" r="${r}" fill="#f4efe6" stroke="#2a2825" stroke-width="2"/>
+    <path d="M${x-r} ${y} A${r} ${r} 0 0 0 ${x} ${y+r}" fill="none" stroke="${VC.L}" stroke-width="6"/>
+    <path d="M${x} ${y+r} A${r} ${r} 0 0 0 ${x+r} ${y}" fill="none" stroke="${VC.R}" stroke-width="6"/>
+    <ellipse cx="${x}" cy="${y-r+3}" rx="12" ry="6" fill="#8fb7c9" stroke="#2a2825" stroke-width="1.4"/><circle cx="${x}" cy="${y-r+4}" r="3.6" fill="#1b1a17"/>`;
+}
+/* shared top-view scene for the pathway and split-brain boards
+   o.vf: which field's light to show ("both" | "l" | "r"); o.exp: the split-brain experiment board; o.cut: corpus callosum cut; o.shown: flashed object */
+function drawTop(o){
+  const show = side => o.vf==="both" || o.vf===side;
+  const op = side => show(side) ? 1 : .12;
+  const cones = [438,562].map(xe=>`<path d="M170 150 L500 150 L${xe} 274 Z" fill="${VC.R}" fill-opacity="${.16*op("l")}"/><path d="M500 150 L830 150 L${xe} 274 Z" fill="${VC.L}" fill-opacity="${.16*op("r")}"/>`).join("");
+  const showPencil = o.exp ? o.shown==="pencil" : true, showApple = o.exp ? o.shown==="apple" : true;
+  const fib = (d,c,side)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round" opacity="${op(side)}" class="${o.flow&&show(side)?"vflow":""}"/>`;
+  const cc = o.cut
+    ? `<rect class="tint" x="489" y="470" width="22" height="92" rx="9" fill="#e4c46a" ${OLt}/><rect class="tint" x="489" y="598" width="22" height="92" rx="9" fill="#e4c46a" ${OLt}/>
+       <path d="M474 580 L526 580" stroke="#ff6b5e" stroke-width="3" stroke-dasharray="6 5"/><rect x="480" y="462" width="40" height="236" fill="transparent"/>`
+    : `<rect class="tint" x="489" y="470" width="22" height="220" rx="10" fill="#e4c46a" ${OLt}/><path d="M489 500 h22 M489 530 h22 M489 560 h22 M489 590 h22 M489 620 h22 M489 650 h22" stroke="#9c8640" stroke-width="1.4" opacity=".7"/><rect x="480" y="462" width="40" height="236" fill="transparent"/>`;
+  return `
+  ${cones}
+  ${G("lvf", `<rect class="tint" x="170" y="60" width="330" height="90" rx="10" fill="${VC.R}" ${OLt}/>${showPencil?PENCIL(330,104):""}`)}
+  ${G("rvf", `<rect class="tint" x="500" y="60" width="330" height="90" rx="10" fill="${VC.L}" ${OLt}/>${showApple?APPLE(668,108):""}`)}
+  <circle cx="500" cy="105" r="6" fill="#1b1a17" stroke="#f4efe6" stroke-width="2" style="pointer-events:none"/>
+  ${topHemis()}
+  ${G("vleft", `<path class="tint" d="${TOP_VL}" fill="${VC.L}" ${OLt}/>`)}
+  ${G("vright", `<path class="tint" d="${TOP_VR}" fill="${VC.R}" ${OLt}/>`)}
+  ${G("cc", cc)}
+  ${o.exp ? "" : G("thal", `<ellipse class="tint" cx="468" cy="560" rx="17" ry="27" fill="#3ecf8e" ${OLt}/><ellipse class="tint" cx="532" cy="560" rx="17" ry="27" fill="#3ecf8e" ${OLt}/>`)}
+  ${o.exp ? G("speech", `<circle class="tint" cx="322" cy="482" r="20" fill="#b38cff" ${OLt}/><path d="M311 472 h22 a4 4 0 0 1 4 4 v9 a4 4 0 0 1 -4 4 h-12 l-6 6 v-6 h-4 a4 4 0 0 1 -4 -4 v-9 a4 4 0 0 1 4 -4 z" fill="#fcfbf8" stroke="#1b1a17" stroke-width="1.8" style="pointer-events:none"/>`) : ""}
+  <g style="pointer-events:none">
+    ${fib(TOP_FIB.Lb,VC.L,"r")}${fib(TOP_FIB.Rb,VC.L,"r")}${fib(TOP_FIB.radL,VC.L,"r")}
+    ${fib(TOP_FIB.Lr,VC.R,"l")}${fib(TOP_FIB.Rr,VC.R,"l")}${fib(TOP_FIB.radR,VC.R,"l")}
+    ${o.relay||""}
+  </g>
+  ${o.exp ? "" : G("nerves", `<path class="halo" d="${NERVES}" stroke-width="16"/><path d="${NERVES}" fill="none" stroke="transparent" stroke-width="22"/>`)}
+  ${G("chiasm", `<circle class="halo" cx="500" cy="431" r="20" stroke-width="7"/><circle cx="500" cy="431" r="24" fill="transparent"/>`)}
+  ${G("eyes", eyeTop(438) + eyeTop(562) + `<rect x="404" y="268" width="192" height="64" fill="transparent"/>`)}`;
+}
+function drawPathway(st){ return drawTop({vf: st.mode.vf||"both"}); }
+
+/* split-brain experiment: what reaches speech? */
+const SPLIT_OUT = {
+  "cut/apple":["“An apple.”","The apple is in the right visual field, so it goes to the left hemisphere. Speech is in the left hemisphere, so the patient can name it."],
+  "cut/pencil":["“Nothing.”","The pencil is in the left visual field, so only the right hemisphere gets it. Speech is in the left hemisphere, and with the corpus callosum cut the message cannot cross, so the patient cannot name it."],
+  "whole/apple":["“An apple.”","The right visual field goes to the left hemisphere, where speech is. The corpus callosum also shares it with the right hemisphere."],
+  "whole/pencil":["“A pencil.”","The right hemisphere sees the pencil, then the corpus callosum carries the message across to speech in the left hemisphere."],
+};
+function drawSplit(st){
+  const cut = (st.mode.cc||"cut")==="cut", obj = st.mode.obj||"apple", flashed = !!st.mode.flashed;
+  const vf = flashed ? (obj==="apple"?"r":"l") : "both";
+  let relay = "";
+  if (flashed){
+    if (obj==="apple") relay = `<path d="M412 760 C352 700 318 600 322 512" fill="none" stroke="${VC.L}" stroke-width="5" stroke-dasharray="10 9" class="vflow" marker-end="url(#mkBlue)"/>`;
+    else if (!cut) relay = `<path d="M588 760 C566 694 530 640 506 604 C470 560 390 520 346 494" fill="none" stroke="${VC.R}" stroke-width="5" stroke-dasharray="10 9" class="vflow" marker-end="url(#mkRed)"/>`;
+    else relay = `<path d="M588 760 C570 700 548 646 524 612" fill="none" stroke="${VC.R}" stroke-width="5" stroke-dasharray="10 9" class="vflow"/>
+      <g stroke="#ff6b5e" stroke-width="6" stroke-linecap="round"><path d="M486 566 L514 594 M514 566 L486 594"/></g>`;
+  }
+  const out = flashed ? SPLIT_OUT[(cut?"cut":"whole")+"/"+obj][0] : "";
+  const bubble = flashed ? `<g style="pointer-events:none"><path d="M70 556 h190 a14 14 0 0 1 14 14 v46 a14 14 0 0 1 -14 14 h-120 l-24 22 v-22 h-46 a14 14 0 0 1 -14 -14 v-46 a14 14 0 0 1 14 -14 z" fill="#fcfbf8" stroke="#2a2825" stroke-width="2"/>
+     <text x="165" y="604" text-anchor="middle" style="font:600 26px var(--font-body);fill:#1b1a17">${out}</text><text x="165" y="686" text-anchor="middle" class="mcap">patient says</text></g>` : "";
+  return drawTop({vf, exp:true, cut, shown: flashed ? obj : null, flow: flashed, relay}) + bubble;
+}
+
+/* lateral view with the visual areas from the occipital-lobe slide */
+const LT = (x,y)=>[+(0.8*x-26).toFixed(1), +(0.8*y+20).toFixed(1)];
+function drawCortex(){
+  const brain = `<g class="art" transform="translate(-26 20) scale(.8)">${artBase("lateral",false)}
+    ${G("v2", `<use href="#lat-r-occipital" class="tint" fill="#3ecf8e" stroke="#f3eee6" stroke-width="2"/>`)}
+    ${G("v1", `<ellipse class="tint" cx="1262" cy="470" rx="78" ry="150" clip-path="url(#clipOcc)" fill="#b38cff"/>`)}
+    ${G("pp", `<ellipse class="tint" cx="1040" cy="230" rx="175" ry="215" clip-path="url(#clipLatPar)" fill="#ff9f43"/>`)}
+    ${G("it", `<path class="tint" d="M590 700 C660 630 840 584 1080 568 L1080 760 L590 760 Z" clip-path="url(#clipLatTmp)" fill="#ff6b5e"/>`)}
+    <g style="pointer-events:none">${artDetail("lateral",true)}</g>
+  </g>`;
+  const eye = [134,540];
+  return `${brain}
+  <path d="M948 420 C860 470 760 506 640 528" fill="none" stroke="#2c6fd6" stroke-width="7" stroke-linecap="round" marker-end="url(#mkWhat)" style="pointer-events:none"/>
+  <text x="820" y="452" text-anchor="middle" style="font:italic 700 26px var(--font-body);fill:#2c6fd6;pointer-events:none">What</text>
+  <path d="M438 508 C480 466 510 432 534 402 C650 380 820 384 968 396" fill="none" stroke="#ffd23f" stroke-width="5" stroke-dasharray="3 9" stroke-linecap="round" opacity=".95" style="pointer-events:none"/>
+  ${G("thal", `<ellipse class="tint-t" cx="534" cy="401" rx="36" ry="22"/><ellipse cx="534" cy="401" rx="36" ry="22" fill="none" stroke="#f3eee6" stroke-width="2.4" stroke-dasharray="7 5"/>`)}
+  ${G("nerve", `<path class="halo" d="M166 534 C250 528 350 520 438 508" stroke-width="16"/><path d="M166 534 C250 528 350 520 438 508" fill="none" stroke="#ffd23f" stroke-width="7" stroke-linecap="round"/><path d="M166 534 C250 528 350 520 438 508" fill="none" stroke="transparent" stroke-width="26"/>`)}
+  ${G("eye", `<circle class="tint" cx="${eye[0]}" cy="${eye[1]}" r="30" fill="#f4efe6" stroke="#2a2825" stroke-width="2"/><ellipse cx="${eye[0]-24}" cy="${eye[1]}" rx="7" ry="14" fill="#8fb7c9" stroke="#2a2825" stroke-width="1.4"/><circle cx="${eye[0]-27}" cy="${eye[1]}" r="4" fill="#1b1a17"/>`)}
+  <text x="134" y="600" text-anchor="middle" class="mcap" style="pointer-events:none">front</text>`;
+}
+
+/* two hemispheres, from above */
+const TS = 1.4, TT = (x,y)=>[+(TS*x-200).toFixed(1), +(TS*y-400).toFixed(1)];
+const HEMI_LIST = {L:["Reading","Writing","Speaking","Math","Comprehension"], R:["Creativity","Rhythm","Non-verbal","Feelings","Visuospatial"]};
+function drawTwo(){
+  const list = (side, x) => HEMI_LIST[side].map((w,i)=>`<text class="hsk" x="${x}" y="${262+i*54}" text-anchor="middle" style="font:600 26px var(--font-body);fill:#1b1a17;pointer-events:none">${w}</text>`).join("");
+  return `<g transform="translate(-200 -400) scale(${TS})">
+    ${G("lh", `<path class="tint" d="${TOP_LH}" fill="${VC.L}" ${OL}/>`)}
+    ${G("rh", `<path class="tint" d="${TOP_RH}" fill="#ffb74d" ${OL}/>`)}
+    <g style="pointer-events:none"><path d="${TOP_GYRI_L}" clip-path="url(#clipTopL)" fill="none" stroke="#2a2825" stroke-width="2.4" stroke-linecap="round" opacity=".18"/>
+    <path d="${TOP_GYRI_R}" clip-path="url(#clipTopR)" fill="none" stroke="#2a2825" stroke-width="2.4" stroke-linecap="round" opacity=".18"/></g>
+    ${G("cc", `<rect class="tint" x="489" y="440" width="22" height="270" rx="10" fill="#e4c46a" ${OLt}/><path d="M489 470 h22 M489 500 h22 M489 530 h22 M489 560 h22 M489 590 h22 M489 620 h22 M489 650 h22 M489 680 h22" stroke="#9c8640" stroke-width="1.4" opacity=".7"/><rect x="482" y="430" width="36" height="290" fill="transparent"/>`)}
+    ${G("broca", `<ellipse class="tint" cx="304" cy="470" rx="20" ry="28" fill="#b38cff" ${OLt}/>`)}
+    ${G("wernicke", `<ellipse class="tint" cx="296" cy="630" rx="20" ry="32" fill="#f06292" ${OLt}/>`)}
+  </g>
+  ${list("L", TT(392,0)[0])}${list("R", TT(608,0)[0])}
+  <text x="500" y="818" text-anchor="middle" class="mcap" style="pointer-events:none">back of the head</text>`;
+}
+
+/* hemisphere sorting game: the words on the slide's “left brain / right brain” chart that are not already printed on the diagram */
+const HSKILLS = [["Logic","L"],["Analysis","L"],["Sequencing","L"],["Linear","L"],["Language","L"],["Facts","L"],["Think in words","L"],["Words of songs","L"],["Computation","L"],
+  ["Imagination","R"],["Holistic thinking","R"],["Intuition","R"],["Arts (motor skill)","R"],["Visualisation","R"],["Tune of songs","R"],["Daydreaming","R"]];
+function hemiGame(root, X){
+  const box = root.querySelector("[data-hg]"); if (!box) return;
+  const g = X.st.hg || (X.st.hg = {order:shuffle(HSKILLS.map((_,i)=>i)), i:0, c:0, last:null});
+  const draw = ()=>{
+    if (g.i >= g.order.length){
+      box.innerHTML = `<div class="hg-q"><span class="kbd">Which hemisphere?</span><b>Done: ${g.c} of ${g.order.length} right</b></div><button class="btn primary" type="button" data-hga>Play again</button>`;
+      box.querySelector("[data-hga]").onclick = ()=>{ X.st.hg = null; hemiGame(root, X); }; return;
+    }
+    const [w, side] = HSKILLS[g.order[g.i]], L = g.last;
+    box.innerHTML = `<div class="hg-q"><span class="kbd">Your slide's chart: which hemisphere? ${g.i+1} of ${g.order.length}</span><b>${esc(w)}</b></div>
+      <div class="hg-btns"><button class="btn ghost" type="button" data-hs="L" ${L?"disabled":""}>Left</button><button class="btn ghost" type="button" data-hs="R" ${L?"disabled":""}>Right</button>
+      ${L?`<button class="btn primary" type="button" data-hgn>Next →</button>`:""}</div>
+      <span class="xnote" data-out>${L ? (L.ok ? `<b style="color:var(--good)">Right.</b> ` : `<b style="color:var(--bad)">Not quite.</b> `) + `${esc(w)} is a <b>${side==="L"?"left":"right"}</b>-hemisphere skill.` : (g.i ? `Score: ${g.c} of ${g.i}` : "Sort each word from the left brain / right brain chart.")}</span>`;
+    box.querySelectorAll("[data-hs]").forEach(b=>b.onclick=()=>{ g.last = {ok: b.dataset.hs===side}; if (g.last.ok) g.c++; X.select(side==="L"?"lh":"rh"); draw(); });
+    const n = box.querySelector("[data-hgn]"); if (n){ n.onclick=()=>{ g.i++; g.last=null; X.select(null); draw(); }; n.focus(); }
+  };
+  draw();
+}
+
+const VBOARDS = [
+ {id:"pathway", name:"Eye to brain", sub:"the visual pathway", c:"#4fc3f7", vb:[1000,900], draw:drawPathway,
+  title:"From the eyes to the brain", intro:"What you see is split into a left visual field and a right visual field. The optic nerves carry each eye's message back, cross at the optic chiasm, pass through the thalamus, and end at the visual areas in the occipital lobes at the back of the brain.",
+  hook:"<b>Opposite sides:</b> what you see on your <b>left</b> is handled by your <b>right</b> hemisphere, and the <b>right</b> visual field goes to the <b>left</b> hemisphere.",
+  facts:["Left visual field → right hemisphere; right visual field → left hemisphere","The optic nerves cross at the optic chiasm","The thalamus relays information from the senses (except smell) on to the rest of the brain","The occipital lobe at the back of the head contains the primary visual cortex"],
+  extra:st=>`<div class="xctl"><div class="seg" role="group" aria-label="Light from" style="flex:1 1 420px">
+     <button type="button" data-vf="both" aria-pressed="${(st.mode.vf||"both")==="both"}">Both fields<small>everything you see</small></button>
+     <button type="button" data-vf="l" aria-pressed="${st.mode.vf==="l"}">Left field<small>the pencil</small></button>
+     <button type="button" data-vf="r" aria-pressed="${st.mode.vf==="r"}">Right field<small>the apple</small></button></div></div>`,
+  bind:(root,X)=>{ root.querySelectorAll("[data-vf]").forEach(b=>b.onclick=()=>{ X.st.mode.vf=b.dataset.vf; X.render(); }); },
+  parts:[
+   {id:"lvf", name:"Left visual field", fn:"Goes to the right hemisphere", d:"Everything to the left of the spot you are looking at (here, the pencil). Its light lands on the right half of each eye, and its message ends up in the right hemisphere.", at:[250,82], lab:[250,40,"t"], al:["left visual field","lvf","left field"]},
+   {id:"rvf", name:"Right visual field", fn:"Goes to the left hemisphere", d:"Everything to the right of the spot you are looking at (here, the apple). Its light lands on the left half of each eye, and its message ends up in the left hemisphere.", at:[750,82], lab:[750,40,"t"], al:["right visual field","rvf","right field"]},
+   {id:"eyes", name:"Eyes", fn:"Take in light", d:"Each eye takes in light from both visual fields. On your slide each eye is half blue and half red: one half for each field.", at:[410,300], lab:[230,300,"l"], al:["eye","eyes"]},
+   {id:"nerves", name:"Optic nerves", fn:"Carry the message to the brain", d:"Carry the visual message from the back of each eye toward the brain.", at:[440,370], lab:[230,392,"l"], al:["optic nerve","optic nerves"]},
+   {id:"chiasm", name:"Optic chiasm", fn:"Where the nerves cross", d:"Where the optic nerves meet and partly cross over. After it, everything from the left visual field travels on the right side of the brain, and everything from the right visual field on the left side.", at:[500,431], lab:[790,431,"r"], al:["optic chiasm","chiasm","optic chiasma"]},
+   {id:"thal", name:"Thalamus", fn:"Relays the senses (not smell)", d:"Receives information from the senses (except smell) and relays it to the rest of the brain. Visual messages pass through it on their way to the occipital lobe.", at:[532,560], lab:[790,540,"r"], al:["thalamus"]},
+   {id:"cc", name:"Corpus callosum", fn:"Connects the hemispheres", d:"Bundle of nerves connecting the left and right hemispheres, so each side can share what it saw.", at:[500,650], lab:[790,650,"r"], al:["corpus callosum","callosum"]},
+   {id:"vleft", name:"Visual area of the left hemisphere", lt:"Left visual area", fn:"Sees the right visual field", d:"At the back of the left hemisphere, in the occipital lobe's primary visual cortex. It receives the right visual field.", at:[420,790], lab:[300,856,"b"], al:["visual area of the left hemisphere","visual area of left hemisphere","left visual area","left hemisphere visual area","left visual cortex","left occipital lobe"]},
+   {id:"vright", name:"Visual area of the right hemisphere", lt:"Right visual area", fn:"Sees the left visual field", d:"At the back of the right hemisphere, in the occipital lobe's primary visual cortex. It receives the left visual field.", at:[580,790], lab:[700,856,"b"], al:["visual area of the right hemisphere","visual area of right hemisphere","right visual area","right hemisphere visual area","right visual cortex","right occipital lobe"]},
+  ]},
+ {id:"cortex", name:"Visual cortex", sub:"the occipital lobe", c:"#b38cff", vb:[1000,830], draw:drawCortex,
+  title:"The visual cortex", intro:"The eyes are at the front, but vision is handled at the very back of the brain. The occipital lobe contains the primary visual cortex, the first stop for what the eyes see. Your slide colors three more visual areas around it.",
+  hook:"<b>See at the back:</b> the <b>occipital</b> lobe, at the back of the head, holds the <b>primary visual cortex</b>.",
+  facts:["Occipital lobes: located in the back of the head; contain the primary visual cortex","Your slide colors four areas: primary visual cortex, secondary visual cortex, inferotemporal area and posterior parietal area","The “What” arrow runs from the visual cortex into the temporal lobe (the inferotemporal area)"],
+  parts:[
+   {id:"v1", name:"Primary visual cortex", fn:"First stop for vision", d:"In the occipital lobe at the very back of the head (purple on your slide). It is the first part of the cortex to receive what the eyes see.", at:[976,400], lab:[990,808,"tl"], al:["primary visual cortex","visual cortex","v1","primary visual"]},
+   {id:"v2", name:"Secondary visual cortex", fn:"Keeps building the picture", d:"Surrounds the primary visual cortex (green on your slide) and keeps processing what you see.", at:[880,300], lab:[910,52,"t"], al:["secondary visual cortex","secondary visual","v2"]},
+   {id:"pp", name:"Posterior parietal area", fn:"Judges where things are", d:"The back of the parietal lobe (orange on your slide, where it is spelled “posterior partial area”). It uses what you see to judge where things are.", at:[756,196], lab:[640,52,"t"], al:["posterior parietal area","posterior parietal","posterior partial area","parietal area"]},
+   {id:"it", name:"Inferotemporal area", fn:"Recognizes what you see", d:"The lower part of the temporal lobe (red on your slide). It sits at the end of the “What” arrow: recognizing what you are looking at.", at:[640,566], lab:[400,690,"b"], al:["inferotemporal area","inferotemporal","inferior temporal","inferotemporal cortex"]},
+   {id:"eye", name:"Eye", fn:"Takes in light", d:"Takes in light. Its message starts the trip to the back of the brain.", at:[106,540], lab:[80,540,"l"], al:["eye","eyes"]},
+   {id:"nerve", name:"Optic nerve", fn:"Carries the message", d:"Carries the visual message from the eye back into the brain.", at:[300,524], lab:[300,620,"b"], al:["optic nerve","optic nerves"]},
+   {id:"thal", name:"Thalamus", fn:"Relay station", d:"Receives information from the senses (except smell) and relays it to the rest of the brain, so vision passes through it on the way to the occipital lobe. It is deep inside the brain, so it is drawn dashed.", at:[534,401], lab:[380,52,"t"], al:["thalamus"]},
+  ]},
+];
+const HBOARDS = [
+ {id:"two", name:"Two hemispheres", sub:"hemispheric specialization", c:"#4fc3f7", vb:[1000,830], draw:drawTwo,
+  title:"Our divided brain", intro:"Hemispheric specialization: the left and right hemispheres are each better at different kinds of processing. The corpus callosum connects them.",
+  hook:"<b>Left = Language</b> (both start with L): reading, writing, speaking. The <b>right</b> side handles the creative, non-verbal, visuospatial work.",
+  facts:["Left hemisphere: reading, writing, speaking, math and comprehension; called the “dominant brain” in the 1960s","Right hemisphere: creativity, rhythm, non-verbal, feelings and visuospatial skills","Broca's area (forming words) and Wernicke's area (understanding language) are in the left hemisphere only","The corpus callosum is the bundle of nerves connecting the two hemispheres"],
+  extra:()=>`<div class="xctl hgame" data-hg></div>`,
+  bind:(root,X)=>hemiGame(root,X),
+  parts:[
+   {id:"lh", name:"Left hemisphere", fn:"Reading, writing, speaking, math", d:"Processes reading, writing, speaking, math and comprehension skills. It was called the “dominant brain” in the 1960s.", at:TT(380,420), lab:[250,40,"t"], al:["left hemisphere","left brain","left"]},
+   {id:"rh", name:"Right hemisphere", fn:"Creativity, rhythm, feelings", d:"Processes creativity, rhythm, non-verbal skills, feelings and visuospatial skills.", at:TT(620,420), lab:[750,40,"t"], al:["right hemisphere","right brain","right"]},
+   {id:"cc", name:"Corpus callosum", fn:"Connects the hemispheres", d:"Bundle of nerves connecting the left and right hemispheres. Cutting it is the split-brain operation.", at:TT(500,690), lab:[880,760,"b"], al:["corpus callosum","callosum"]},
+   {id:"broca", name:"Broca's area", fn:"Forming words", d:"In the frontal lobe of the left hemisphere only, on its outer side. Needed for forming words.", at:TT(296,470), lab:[110,200,"t"], al:["broca's area","brocas area","broca","broca area"]},
+   {id:"wernicke", name:"Wernicke's area", fn:"Understanding language", d:"In the temporal lobe of the left hemisphere only, on its outer side. Involved in understanding language.", at:TT(290,630), lab:[110,600,"b"], al:["wernicke's area","wernickes area","wernicke","wernicke area"]},
+  ]},
+ {id:"split", name:"Split brain", sub:"Sperry & Gazzaniga", c:"#ff6b5e", vb:[1000,900], draw:drawSplit,
+  title:"Split-brain patients", intro:"Splitting the brain is a form of psychosurgery: the corpus callosum is cut, isolating the two hemispheres. Roger Sperry and Gazzaniga studied people who had this surgery for grand mal seizures. Flash an object to one side and see whether the patient can name it.",
+  hook:"<b>Cross-over rule:</b> each visual field goes to the <b>opposite</b> hemisphere, and speech is on the <b>left</b>. Cut the corpus callosum and only the <b>right</b> visual field (the apple) can be named.",
+  facts:["Splitting the brain: psychosurgery that isolates the hemispheres by cutting the corpus callosum","Roger Sperry and Gazzaniga researched it; the surgery helped people with grand mal seizures","With the corpus callosum cut, an apple in the right visual field can be named; a pencil in the left visual field cannot"],
+  extra:st=>{ const cut=(st.mode.cc||"cut")==="cut", obj=st.mode.obj||"apple", o=st.mode.flashed?SPLIT_OUT[(cut?"cut":"whole")+"/"+obj]:null;
+    return `<div class="xctl"><div class="seg" role="group" aria-label="Corpus callosum" style="flex:1 1 300px">
+       <button type="button" data-cc="cut" aria-pressed="${cut}">Cut<small>split-brain patient</small></button>
+       <button type="button" data-cc="whole" aria-pressed="${!cut}">Intact<small>for comparison</small></button></div>
+      <div class="seg" role="group" aria-label="Object" style="flex:1 1 300px">
+       <button type="button" data-ob="apple" aria-pressed="${obj==="apple"}">Apple<small>right visual field</small></button>
+       <button type="button" data-ob="pencil" aria-pressed="${obj==="pencil"}">Pencil<small>left visual field</small></button></div>
+      <button class="btn primary" type="button" data-act="flash">${st.mode.flashed?"Flash again":"Flash it"}</button></div>
+      <p class="xnote splitout" data-out>${o?`<b>Patient says ${esc(o[0])}</b> ${esc(o[1])}`:"Pick cut or intact and an object, then flash it. The patient stares at the dot in the middle."}</p>`; },
+  bind:(root,X)=>{
+    root.querySelectorAll("[data-cc]").forEach(b=>b.onclick=()=>{ X.st.mode.cc=b.dataset.cc; X.st.mode.flashed=false; X.render(); });
+    root.querySelectorAll("[data-ob]").forEach(b=>b.onclick=()=>{ X.st.mode.obj=b.dataset.ob; X.st.mode.flashed=false; X.render(); });
+    const f = root.querySelector('[data-act="flash"]'); if (f) f.onclick=()=>{ X.st.mode.flashed=true; X.render(); };
+  },
+  parts:[
+   {id:"lvf", name:"Left visual field", fn:"Goes to the right hemisphere", d:"Where the pencil is flashed. Only the right hemisphere receives it.", at:[250,82], lab:[250,40,"t"], al:["left visual field","lvf","left field"]},
+   {id:"rvf", name:"Right visual field", fn:"Goes to the left hemisphere", d:"Where the apple is flashed. It goes to the left hemisphere, which can speak.", at:[750,82], lab:[750,40,"t"], al:["right visual field","rvf","right field"]},
+   {id:"chiasm", name:"Optic chiasm", fn:"Where the nerves cross", d:"The optic nerves cross here. This is why each visual field reaches the opposite hemisphere.", at:[500,431], lab:[790,431,"r"], al:["optic chiasm","chiasm"]},
+   {id:"cc", name:"Corpus callosum (cut)", lt:"Corpus callosum", fn:"Cut in split-brain surgery", d:"Normally carries messages between the hemispheres. In split-brain patients it has been cut, so what one side sees stays on that side.", at:[500,520], lab:[790,560,"r"], al:["corpus callosum","callosum","corpus callosum cut"]},
+   {id:"speech", name:"Speech (left hemisphere)", lt:"Speech", fn:"Says what was seen", d:"Speech is in the left hemisphere (Broca's area, which forms words, is in the left hemisphere only). Only what reaches the left hemisphere can be named out loud.", at:[310,470], lab:[230,420,"l"], al:["speech","speech area","broca's area","left hemisphere speech"]},
+   {id:"vleft", name:"Visual area of the left hemisphere", lt:"Left visual area", fn:"Sees the right field (apple)", d:"Receives the right visual field: the apple. Speech is on this side too.", at:[420,790], lab:[300,856,"b"], al:["visual area of the left hemisphere","visual area of left hemisphere","left visual area","left hemisphere visual area"]},
+   {id:"vright", name:"Visual area of the right hemisphere", lt:"Right visual area", fn:"Sees the left field (pencil)", d:"Receives the left visual field: the pencil. It sees it, but it cannot say what it is.", at:[580,790], lab:[700,856,"b"], al:["visual area of the right hemisphere","visual area of right hemisphere","right visual area","right hemisphere visual area"]},
+  ]},
+];
+Object.assign(PC, {
+  pathway:{lvf:VC.R, rvf:VC.L, eyes:"#b38cff", nerves:"#ffb74d", chiasm:"#f06292", thal:"#3ecf8e", cc:"#e4c46a", vleft:VC.L, vright:VC.R},
+  cortex:{v1:"#b38cff", v2:"#3ecf8e", pp:"#ff9f43", it:"#ff6b5e", eye:"#4fc3f7", nerve:"#ffd23f", thal:"#4dd0e1"},
+  two:{lh:VC.L, rh:"#ffb74d", cc:"#e4c46a", broca:"#b38cff", wernicke:"#f06292"},
+  split:{lvf:VC.R, rvf:VC.L, chiasm:"#f06292", cc:"#e4c46a", speech:"#b38cff", vleft:VC.L, vright:VC.R},
+});
+
+const ALLBOARDS = [...NBOARDS.map(b=>Object.assign(b,{page:"neurons"})), ...BBOARDS.map(b=>Object.assign(b,{page:"nervous"})), ...VBOARDS.map(b=>Object.assign(b,{page:"vision"})), ...HBOARDS.map(b=>Object.assign(b,{page:"hemis"}))];
+const PAGE_SEC = {neurons:"neuro", nervous:"neuro", vision:"brain", hemis:"brain"};
 const BOARDBY = Object.fromEntries(ALLBOARDS.map(b=>[b.page+"/"+b.id,b]));
 
 /* ---------- explorer ---------- */
@@ -3204,7 +3507,7 @@ const QTOPICS = [["brain","Brain parts","brain map"],["body","Neurons & body","d
 let qTopic = (store.ui && store.ui.qtopic) || "brain";
 const QHEAD = {
   brain:["Brain Parts Quiz","Type the name of a highlighted part, tap a named part, or tap the part that does a job."],
-  body:["Diagram Quiz","Parts of the neuron, synapse, glial cells, reflex arc and hormone glands."],
+  body:["Diagram Quiz","Vision, the hemispheres and the split brain, plus the neuron, synapse, glial cells, reflex arc and hormone glands."],
   nt:["Neurotransmitter Quiz","Read a clue from the slides and pick the neurotransmitter, or say whether it is excitatory or inhibitory."],
   terms:["Terms Quiz","Read a definition and pick the term. Choose one topic or mix all of them."],
 };
@@ -3223,7 +3526,7 @@ function stat(bucket, id){ store[bucket]=store[bucket]||{}; return store[bucket]
 /* ---------- diagram (body) quiz ---------- */
 const QBOARDS = ALLBOARDS.filter(b=>!b.noquiz);
 const bq = {mode:(store.ui&&store.ui.bqmode)||"find", set:"all", items:[], i:0, answered:false, last:null, res:[], done:false, hint:0, retry:false};
-function bqPool(set){ return QBOARDS.filter(b=>set==="all"||b.page+"/"+b.id===set).flatMap(b=>b.parts.map(p=>({k:b.page+"/"+b.id, p:p.id}))); }
+function bqPool(set){ return QBOARDS.filter(b=>set==="all"||b.page+"/"+b.id===set||set==="sec:"+PAGE_SEC[b.page]).flatMap(b=>b.parts.map(p=>({k:b.page+"/"+b.id, p:p.id}))); }
 function bqNew(items, retry=false){ bq.items = shuffle((items||bqPool(bq.set)).slice()).slice(0, items?999:15); bq.i=0; bq.res=[]; bq.done=false; bq.retry=retry; bqLoad(); }
 function bqLoad(){ bq.answered=false; bq.last=null; bq.hint=0; bqRender(true); }
 function bqCur(){ const it=bq.items[bq.i]; const b=BOARDBY[it.k]; return {it, b, p:b.parts.find(x=>x.id===it.p)}; }
@@ -3249,13 +3552,14 @@ function bqHint(b,p){
 }
 function bqRender(focus){
   const wrap = $("#bqWrap"); const n = bq.items.length, correct = bq.res.filter(r=>r.ok).length, wrong = bq.res.length-correct;
-  const sets = [["all","All diagrams"], ...QBOARDS.map(b=>[b.page+"/"+b.id, b.name])];
+  const grp = (sec, label, all) => `<optgroup label="${label}"><option value="sec:${sec}" ${bq.set==="sec:"+sec?"selected":""}>${all}</option>${QBOARDS.filter(b=>PAGE_SEC[b.page]===sec).map(b=>`<option value="${b.page}/${b.id}" ${b.page+"/"+b.id===bq.set?"selected":""}>${esc(b.name)}</option>`).join("")}</optgroup>`;
+  const setOpts = `<option value="all" ${bq.set==="all"?"selected":""}>All diagrams</option>${grp("brain","The Brain","All brain diagrams")}${grp("neuro","Neurons & Body","All neurons & body diagrams")}`;
   const opts = `<div class="seg" role="group" aria-label="Quiz type" id="bqMode">
       <button type="button" data-m="find" aria-pressed="${bq.mode==="find"}">Find it<small>tap the named part</small></button>
       <button type="button" data-m="func" aria-pressed="${bq.mode==="func"}">By function<small>tap the part that does it</small></button>
       <button type="button" data-m="name" aria-pressed="${bq.mode==="name"}">Name it<small>type the highlighted part</small></button></div>
     <div class="opts"><label for="bqSet" class="kbd" style="font-size:13px">Diagram</label>
-      <select id="bqSet">${sets.map(([k,l])=>`<option value="${k}" ${k===bq.set?"selected":""}>${esc(l)}</option>`).join("")}</select>
+      <select id="bqSet">${setOpts}</select>
       <button class="btn ghost" type="button" id="bqRestart" style="min-height:38px;padding:6px 12px">New round</button></div>`;
   if (bq.done){
     const missed = bq.res.filter(r=>!r.ok).map(r=>r.it);
@@ -3369,6 +3673,8 @@ $("#qTopic").addEventListener("click", e=>{ const b=e.target.closest("[data-t]")
 
 const NX = Explorer("neurons", $("#nxRoot"), NBOARDS);
 const BX = Explorer("nervous", $("#bxRoot"), BBOARDS);
+const VX = Explorer("vision", $("#vxRoot"), VBOARDS);
+const HX = Explorer("hemis", $("#hxRoot"), HBOARDS);
 function sumAll(){ let c=0,w=0; for (const k of ["stats","bq","ntq","tq"]) for (const v of Object.values(store[k]||{})){ c+=v.c; w+=v.w; } return {c,w}; }
 function extraProgress(){
   const row = (href, color, name, s)=>{ const n=s?s.c+s.w:0, a=n?s.c/n:null;
@@ -3408,10 +3714,10 @@ $("#themeBtn").addEventListener("click", ()=>{ const t = document.documentElemen
 
 /* ---------------- sections & navigation ---------------- */
 const SECTIONS = {
-  brain:{name:"The Brain", pages:[["brain","Overview"],["study","Brain Map"],["imaging","Imaging"],["atlas","Atlas"]]},
+  brain:{name:"The Brain", pages:[["brain","Overview"],["study","Brain Map"],["imaging","Imaging"],["vision","Vision"],["hemis","Hemispheres"],["atlas","Atlas"]]},
   neuro:{name:"Neurons & Body", pages:[["neuro","Overview"],["neurons","Neurons"],["nervous","Nervous System"],["chem","Neurotransmitters"]]},
 };
-const SEC_OF = {brain:"brain",study:"brain",imaging:"brain",atlas:"brain",neuro:"neuro",neurons:"neuro",nervous:"neuro",chem:"neuro"};
+const SEC_OF = {brain:"brain",study:"brain",imaging:"brain",vision:"brain",hemis:"brain",atlas:"brain",neuro:"neuro",neurons:"neuro",nervous:"neuro",chem:"neuro"};
 function renderNav(target){
   const sec = SEC_OF[target];
   $$(".nav a").forEach(a=>{ const on = a.dataset.sec ? a.dataset.sec===sec : a.dataset.nav===target; if (on) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
@@ -3442,20 +3748,22 @@ function renderSection(sec){
     $("#brainPages").innerHTML =
       ovCard("#study", thumbSVG("parietal","lateral",BY.parietal.c), "Brain Map", "Hover 20 structures on an outside and an inside view, each with its job.", "20 structures") +
       ovCard("#imaging", machineSVG("mri",{mini:true,cls:"th"}), "Imaging", "EEG, CT, PET, MRI and fMRI: each machine and the picture it makes.", "5 scans") +
+      ovCard("#vision", noId(boardSVG(VBOARDS[0],{labels:false,cls:"th"})), "Vision", "From the eyes to the visual cortex, and why each visual field goes to the opposite hemisphere.", "2 diagrams") +
+      ovCard("#hemis", noId(boardSVG(HBOARDS[1],{labels:false,cls:"th"})), "Hemispheres & Split Brain", "What each hemisphere does, and a split-brain experiment you can run.", "2 diagrams · experiment") +
       ovCard("#atlas", thumbSVG("hippocampus","medial",BY.hippocampus.c), "Atlas", "Every brain structure in one searchable list.", "search by name or job");
-    const bp = aggBucket("stats"), tq = aggBucket("tq", k=>TBY[k]&&TC[TBY[k].cat].sec==="brain");
+    const bp = aggBucket("stats"), tq = aggBucket("tq", k=>TBY[k]&&TC[TBY[k].cat].sec==="brain"), bd = aggBucket("bq", k=>PAGE_SEC[k.split("/")[0]]==="brain");
     $("#brainPractice").innerHTML = `<div class="ovp-row"><h2>Practice</h2>
-        <a class="btn primary" href="#quiz-brain">Brain parts quiz</a><a class="btn ghost" href="#quiz-terms-brain">Brain terms quiz</a><a class="btn ghost" href="#terms-brain">Flashcards</a>
-        <span class="ovp-stat">${bp.n||tq.n ? `Brain parts ${pct(bp)} · terms ${pct(tq)}` : "No quiz answers yet"}</span></div>
+        <a class="btn primary" href="#quiz-brain">Brain parts quiz</a><a class="btn ghost" href="#quiz-diag-brain">Vision &amp; hemispheres quiz</a><a class="btn ghost" href="#quiz-terms-brain">Brain terms quiz</a><a class="btn ghost" href="#terms-brain">Flashcards</a>
+        <span class="ovp-stat">${bp.n||tq.n||bd.n ? `Brain parts ${pct(bp)} · diagrams ${pct(bd)} · terms ${pct(tq)}` : "No quiz answers yet"}</span></div>
       <div class="ovp-topics"><span class="kbd">Topics</span>${topicChips("brain")}</div>`;
   } else {
     $("#neuroPages").innerHTML =
       ovCard("#neurons", noId(boardSVG(NBOARDS[1],{labels:false,cls:"th"})), "Neurons", "The neuron, the synapse, the action potential and glial cells.", "4 diagrams") +
       ovCard("#nervous", noId(boardSVG(BBOARDS[1],{labels:false,cls:"th"})), "Nervous System", "Divisions, the reflex arc, fight or flight, and hormones.", "4 diagrams") +
       ovCard("#chem", ntDots(), "Neurotransmitters", "The eight from your slides, with disorders, drugs and two labs.", "8 chemicals");
-    const bq = aggBucket("bq"), nq = aggBucket("ntq");
+    const bq = aggBucket("bq", k=>PAGE_SEC[k.split("/")[0]]==="neuro"), nq = aggBucket("ntq");
     $("#neuroPractice").innerHTML = `<div class="ovp-row"><h2>Practice</h2>
-        <a class="btn primary" href="#quiz-body">Diagram quiz</a><a class="btn ghost" href="#quiz-nt">Neurotransmitter quiz</a><a class="btn ghost" href="#terms-neuro">Flashcards</a>
+        <a class="btn primary" href="#quiz-diag-neuro">Diagram quiz</a><a class="btn ghost" href="#quiz-nt">Neurotransmitter quiz</a><a class="btn ghost" href="#terms-neuro">Flashcards</a>
         <span class="ovp-stat">${bq.n||nq.n ? `Diagrams ${pct(bq)} · neurotransmitters ${pct(nq)}` : "No quiz answers yet"}</span></div>
       <div class="ovp-topics"><span class="kbd">Topics</span>${topicChips("neuro")}</div>`;
   }
@@ -3468,7 +3776,9 @@ function renderProgress(){
   const termsSec = sec=>aggBucket("tq", k=>TBY[k]&&TC[TBY[k].cat].sec===sec);
   const known = sec=>{ const all=TERMS.filter(x=>TC[x.cat].sec===sec); return {c:knownIn(all), w:all.length-knownIn(all), n:all.length}; };
   const weakB = weakList().slice(0,6);
-  const weakP = Object.entries(store.bq||{}).filter(([k,v])=>v.w>0).map(([k,v])=>({k,v,a:v.c/(v.c+v.w)})).sort((x,y)=>x.a-y.a||y.v.w-x.v.w).slice(0,6);
+  const weakBD = Object.entries(store.bq||{}).filter(([k,v])=>v.w>0 && PAGE_SEC[k.split("/")[0]]==="brain").map(([k,v])=>({k,v,a:v.c/(v.c+v.w)})).sort((x,y)=>x.a-y.a||y.v.w-x.v.w).slice(0,4);
+  const partChip = k=>{ const [pg,bid,pid]=k.split("/"); const b=BOARDBY[pg+"/"+bid]; const p=b&&b.parts.find(x=>x.id===pid); return p?`<a class="chip" href="#${pg}-${bid}-${pid}">${esc(p.name)}</a>`:""; };
+  const weakP = Object.entries(store.bq||{}).filter(([k,v])=>v.w>0 && PAGE_SEC[k.split("/")[0]]==="neuro").map(([k,v])=>({k,v,a:v.c/(v.c+v.w)})).sort((x,y)=>x.a-y.a||y.v.w-x.v.w).slice(0,6);
   const weakN = NTS.map(n=>({n,s:(store.ntq||{})[n.id]})).filter(x=>x.s&&x.s.w>0).sort((x,y)=>x.s.c/(x.s.c+x.s.w)-y.s.c/(y.s.c+y.s.w)).slice(0,4);
   const chip = (href,label)=>`<a class="chip" href="${href}">${esc(label)}</a>`;
   $("#progressBody").innerHTML = `
@@ -3479,16 +3789,16 @@ function renderProgress(){
     </div>
     <div class="cols">
       <div class="panel"><h2>The Brain</h2><p class="sub">Tap a row to study it.</p>
-        <div class="rows">${bar("#quiz-brain","#f4c542","Brain parts quiz",aggBucket("stats"))}${bar("#imaging","#4fc3f7","Imaging quiz",st(store.scanq))}${bar("#quiz-terms-brain","var(--good)","Brain terms quiz",termsSec("brain"))}${bar("#terms-brain","var(--good)","Flashcards known",known("brain"))}</div>
+        <div class="rows">${bar("#quiz-brain","#f4c542","Brain parts quiz",aggBucket("stats"))}${bar("#quiz-diag-brain","#ff6b5e","Vision & hemispheres quiz",aggBucket("bq", k=>PAGE_SEC[k.split("/")[0]]==="brain"))}${bar("#imaging","#4fc3f7","Imaging quiz",st(store.scanq))}${bar("#quiz-terms-brain","var(--good)","Brain terms quiz",termsSec("brain"))}${bar("#terms-brain","var(--good)","Flashcards known",known("brain"))}</div>
         <h3 class="ph3">Review next</h3>
-        ${weakB.length? `<div class="misslist">${weakB.map(x=>chip("#study-"+x.id, BY[x.id].name)).join("")}</div>` : `<p class="sub" style="margin:0">Nothing missed yet. Take the brain parts quiz to find your weak spots.</p>`}
-        <details class="pdet"><summary>All 20 brain structures</summary><div class="rows">${S.map(x=>bar("#study-"+x.id, x.c, x.name, st(store.stats[x.id]))).join("")}</div></details>
+        ${weakB.length||weakBD.length? `<div class="misslist">${weakB.map(x=>chip("#study-"+x.id, BY[x.id].name)).join("")}${weakBD.map(x=>partChip(x.k)).join("")}</div>` : `<p class="sub" style="margin:0">Nothing missed yet. Take the brain parts quiz to find your weak spots.</p>`}
+        <details class="pdet"><summary>All 20 brain structures and the brain diagrams</summary><div class="rows">${S.map(x=>bar("#study-"+x.id, x.c, x.name, st(store.stats[x.id]))).join("")}${QBOARDS.filter(b=>PAGE_SEC[b.page]==="brain").map(b=>bar(`#${b.page}-${b.id}`, b.c, b.name, aggBucket("bq", k=>k.startsWith(b.page+"/"+b.id+"/")))).join("")}</div></details>
       </div>
       <div class="panel"><h2>Neurons &amp; Body</h2><p class="sub">Tap a row to study it.</p>
-        <div class="rows">${bar("#quiz-body","#3ecf8e","Diagram quiz",aggBucket("bq"))}${bar("#quiz-nt","#b38cff","Neurotransmitter quiz",aggBucket("ntq"))}${bar("#quiz-terms-neuro","var(--good)","Neuro terms quiz",termsSec("neuro"))}${bar("#terms-neuro","var(--good)","Flashcards known",known("neuro"))}</div>
+        <div class="rows">${bar("#quiz-diag-neuro","#3ecf8e","Diagram quiz",aggBucket("bq", k=>PAGE_SEC[k.split("/")[0]]==="neuro"))}${bar("#quiz-nt","#b38cff","Neurotransmitter quiz",aggBucket("ntq"))}${bar("#quiz-terms-neuro","var(--good)","Neuro terms quiz",termsSec("neuro"))}${bar("#terms-neuro","var(--good)","Flashcards known",known("neuro"))}</div>
         <h3 class="ph3">Review next</h3>
         ${weakP.length||weakN.length? `<div class="misslist">${weakP.map(({k})=>{ const [pg,bid,pid]=k.split("/"); const b=BOARDBY[pg+"/"+bid]; const p=b&&b.parts.find(x=>x.id===pid); return p?chip(`#${pg}-${bid}-${pid}`, p.name):""; }).join("")}${weakN.map(x=>chip("#chem-"+x.n.id, x.n.name)).join("")}</div>` : `<p class="sub" style="margin:0">Nothing missed yet. Take the diagram or neurotransmitter quiz to find your weak spots.</p>`}
-        <details class="pdet"><summary>Each diagram and neurotransmitter</summary><div class="rows">${QBOARDS.map(b=>bar(`#${b.page}-${b.id}`, b.c, b.name, aggBucket("bq", k=>k.startsWith(b.page+"/"+b.id+"/")))).join("")}${NTS.map(n=>bar("#chem-"+n.id, n.c, n.name, st((store.ntq||{})[n.id]))).join("")}</div></details>
+        <details class="pdet"><summary>Each diagram and neurotransmitter</summary><div class="rows">${QBOARDS.filter(b=>PAGE_SEC[b.page]==="neuro").map(b=>bar(`#${b.page}-${b.id}`, b.c, b.name, aggBucket("bq", k=>k.startsWith(b.page+"/"+b.id+"/")))).join("")}${NTS.map(n=>bar("#chem-"+n.id, n.c, n.name, st((store.ntq||{})[n.id]))).join("")}</div></details>
       </div>
     </div>
     <div class="btnrow" style="margin-top:20px" id="resetRow"><button class="btn ghost danger" type="button" id="resetBtn">Reset progress</button></div>`;
@@ -3547,13 +3857,14 @@ function route(){
   let target = "home", sel=null, xsel=null, chemSel=null, qt=null;
   if (h.startsWith("study-")){ sel=h.slice(6); target="study"; }
   else if (h.startsWith("imaging-") && SC[h.slice(8)]){ target="imaging"; if (imaging.cur!==h.slice(8)){ imaging.cur=h.slice(8); imaging.sel=null; } }
-  else if (/^(neurons|nervous)-/.test(h)){ const [pg,bid,pid]=h.split("-"); target=pg; xsel={b:bid,p:pid}; }
+  else if (h.startsWith("quiz-diag-")){ target="quiz"; qt="body"; bq.set="sec:"+h.slice(10); bq.items=[]; bq.done=false; }
+  else if (/^(neurons|nervous|vision|hemis)-/.test(h)){ const [pg,bid,pid]=h.split("-"); target=pg; xsel={b:bid,p:pid}; }
   else if (h.startsWith("chem-")){ target="chem"; chemSel=h.slice(5); }
   else if (h.startsWith("quiz-terms-")){ target="quiz"; qt="terms"; tqz.cat="all"; tqz.sec=h.slice(11); tqz.items=[]; }
   else if (h.startsWith("quiz-")){ target="quiz"; qt=h.slice(5); }
   else if (h==="terms-brain"||h==="terms-neuro"){ target="terms"; terms.sec=h.slice(6); terms.cat="all"; terms.q=""; $("#termsQ").value=""; }
   else if (h.startsWith("terms-") && TC[h.slice(6)]){ target="terms"; terms.cat=h.slice(6); terms.sec=TC[h.slice(6)].sec; terms.q=""; $("#termsQ").value=""; }
-  else if (["home","brain","neuro","neurons","nervous","chem","study","imaging","terms","quiz","atlas","progress"].includes(h)) target=h;
+  else if (["home","brain","neuro","neurons","nervous","vision","hemis","chem","study","imaging","terms","quiz","atlas","progress"].includes(h)) target=h;
   $$("main > section").forEach(s=>s.hidden = s.dataset.page!==target);
   renderNav(target);
 
@@ -3562,6 +3873,8 @@ function route(){
   if (target==="quiz") setTopic(qt && QHEAD[qt] ? qt : qTopic);
   if (target==="neurons"){ if (xsel) NX.go(xsel.b, xsel.p); else NX.render(); }
   if (target==="nervous"){ if (xsel) BX.go(xsel.b, xsel.p); else BX.render(); }
+  if (target==="vision"){ if (xsel) VX.go(xsel.b, xsel.p); else VX.render(); }
+  if (target==="hemis"){ if (xsel) HX.go(xsel.b, xsel.p); else HX.render(); }
   if (target==="chem"){ renderChem();
     if (chemSel){ setChemTab(NTBY[chemSel] ? "cards" : (chemSel==="lab"||chemSel==="meter") ? "labs" : (chemSel==="table"||chemSel==="review") ? chemSel : chemTab);
       const el = NTBY[chemSel] ? (chem.sel=chemSel, renderChemDetail(), $("#ntDetail")) : chemSel==="lab" ? $("#chemLab") : chemSel==="meter" ? $("#chemMeter") : null;
@@ -3597,8 +3910,8 @@ document.addEventListener("keydown",e=>{
     else if (e.key==="1"){ cardMark(0); }
     else if (e.key==="2"){ cardMark(1); }
   }
-  if ((page==="neurons"||page==="nervous") && !typing){
-    const X = page==="neurons" ? NX : BX;
+  if (["neurons","nervous","vision","hemis"].includes(page) && !typing){
+    const X = {neurons:NX, nervous:BX, vision:VX, hemis:HX}[page];
     if (e.key==="ArrowRight"){ e.preventDefault(); X.step(1); }
     else if (e.key==="ArrowLeft"){ e.preventDefault(); X.step(-1); }
     else if (e.key==="l"||e.key==="L"){ X.toggleLabels(); }
